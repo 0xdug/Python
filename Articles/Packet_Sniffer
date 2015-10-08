@@ -5,7 +5,7 @@
 		<guid isPermaLink="false">http://security.securethelock.com/?p=110</guid>
 		<description></description>
 		<content:encoded><![CDATA[
-		In this article we will look at how to create a Packet Sniffer and an Injector using Python. First we will look at packet sniffing with raw sockets.
+In this article we will look at how to create a Packet Sniffer and an Injector using Python. First we will look at packet sniffing with raw sockets.
 
 A <strong>packet sniffer</strong> is a computer program or a piece of computer hardware that can intercept and log traffic passing over a digital network or part of a network. As data streams flow across the network, the sniffer captures each packet and decodes the packet's raw data, showing the values of various fields in the packet, and analyzes its content according to the appropriate RFC (Request for Comments) or other specifications.
 
