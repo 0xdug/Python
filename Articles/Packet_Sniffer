@@ -25,7 +25,9 @@ Here we will use the PF_PACKET interface to create the raw socket (there are mul
 application gets access to the packet in whole including headers, data. And the application can analyse the packet. 
 It operates at layer two of the OSI and allows us to send/receive raw packets directly from the device driver. It 
 supports filtering using Berkley Packet Filter.
-<pre class="lang:python decode:true">#!/usr/bin/python
+<pre class="lang:python decode:true">
+
+#!/usr/bin/python
 import socket
 import struct
 import binascii
