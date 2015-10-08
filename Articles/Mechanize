@@ -1,7 +1,6 @@
 <title>All hail mecanize: A powerful python library</title>
 		<link>http://www.security.securethelock.com/?p=221</link>
 		<pubDate>Wed, 30 Nov -0001 00:00:00 +0000</pubDate>
-		<dc:creator><![CDATA[AnirudhAnand]]></dc:creator>
 		<guid isPermaLink="false">http://security.securethelock.com/?p=221</guid>
 		<description></description>
 		<content:encoded><![CDATA[In this article will look at a very important functionality which can be used to emulate programmatically for web application security, which is parsing the form and its submission, and we will do this using Mechanize.
