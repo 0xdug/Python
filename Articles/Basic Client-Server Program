@@ -1,16 +1,31 @@
 <title>Basic Client Server Programming in Python</title>
 		<link>http://www.security.securethelock.com/client-server-programming-in-python/</link>
 		<pubDate>Sun, 14 Sep 2014 13:30:16 +0000</pubDate>
-		<dc:creator><![CDATA[AnirudhAnand]]></dc:creator>
 		<guid isPermaLink="false">http://security.securethelock.com/?p=54</guid>
 		<description></description>
-		<content:encoded><![CDATA[Computer network programming involves writing computer programs that enable processes to communicate with each other across a computer network. The <b>client–server model</b> of computing is a distributed application structure that partitions tasks or workloads between the providers of a resource or service, called servers, and service requesters, called clients. In simpler words, the basic mechanism of a client-server setup is that a client application sends a requests to the server application, and the server application sends a reply.
+		<content:encoded><![CDATA[
 
-A client-server network consists of at least two computers: one that runs a program requesting services and another that processes those requests. An example for a client-server model is the ATM. Whenever you use an ATM to check your balance or withdraw some money, you are actually participating in a client-server interaction with a computer on your bank’s network. An ATM is actually a client programmed to connect you with your bank's servers. Once a link is established with the ATM, programs on the bank's servers process and fulfill your request for cash or balance information. The Web browser is a client program that has requested a service from a server.
+Computer network programming involves writing computer programs that enable processes to communicate with each other
+across a computer network. The <b>client–server model</b> of computing is a distributed application structure that
+partitions tasks or workloads between the providers of a resource or service, called servers, and service requesters,
+called clients. In simpler words, the basic mechanism of a client-server setup is that a client application sends a 
+requests to the server application, and the server application sends a reply.
 
-The client-server programming relies on socket programming. A <i>socket</i> is one of the most fundamental technologies of computer networking. A socket is a network endpoint for communication between two or more entities. Sockets allow applications to communicate using standard mechanisms built into network hardware and operating systems. There are two kinds of sockets, TCP/UDP(transfer control protocol/ user datagram protocol) sockets, used for regular client and server programming, and Raw sockets used for creating packet sniffers and injector tools.
+A client-server network consists of at least two computers: one that runs a program requesting services and another
+that processes those requests. An example for a client-server model is the ATM. Whenever you use an ATM to check 
+your balance or withdraw some money, you are actually participating in a client-server interaction with a computer
+on your bank’s network. An ATM is actually a client programmed to connect you with your bank's servers. Once a link 
+is established with the ATM, programs on the bank's servers process and fulfill your request for cash or balance 
+information. The Web browser is a client program that has requested a service from a server.
 
-Lets see how to create a simple client and server using sockets. We can do this using the socket module in python. When a client wants to connect to the server to use the service that it provides, the server first creates a socket.
+The client-server programming relies on socket programming. A <i>socket</i> is one of the most fundamental
+technologies of computer networking. A socket is a network endpoint for communication between two or more entities.
+Sockets allow applications to communicate using standard mechanisms built into network hardware and operating 
+systems. There are two kinds of sockets, TCP/UDP(transfer control protocol/ user datagram protocol) sockets, 
+used for regular client and server programming, and Raw sockets used for creating packet sniffers and injector tools.
+
+Lets see how to create a simple client and server using sockets. We can do this using the socket module in python.
+When a client wants to connect to the server to use the service that it provides, the server first creates a socket.
 <pre class="lang:python decode:true">#!/usr/bin/python
 import socket 
 
@@ -38,21 +53,34 @@ client.close()
 
 print " Shutting down server.."
 tcpSocket.close</pre>
-A tcp socket listens on a specific port on the server machine. To do this we call the socket method and pass two arguments.
+A tcp socket listens on a specific port on the server machine. To do this we call the socket method and pass two 
+arguments.
 
 1)<strong> socket.AF_INET</strong> is the address family for Internet based applications.
 
-2)<strong> socket.SOCK_STREAM</strong> decides the kind of sockets required. This is for TCP sockets, if we are using UDP sockets there are datagram sockets.
+2)<strong> socket.SOCK_STREAM</strong> decides the kind of sockets required. This is for TCP sockets, if we are 
+using UDP sockets there are datagram sockets.
 
-Using the bind call, <strong>tcpSocket.bind()</strong>, the socket is bound to a port on the server. Binding a socket to a port also includes binding to a specific interface.
+Using the bind call, <strong>tcpSocket.bind()</strong>, the socket is bound to a port on the server. Binding a 
+socket to a port also includes binding to a specific interface.
 
-After calling listen, we are ready to start accepting clients. Every time we call accept, a new client gets connected, a new client socket gets created. If a server has multiple clients connected to it at the same time, each of them would have a separate client socket which the server would use to communicate with them. By default accept is a block call. Till the time a client doesnot come and connect, accept would just wait and not return.
+After calling listen, we are ready to start accepting clients. Every time we call accept, a new client gets 
+connected, a new client socket gets created. If a server has multiple clients connected to it at the same time, 
+each of them would have a separate client socket which the server would use to communicate with them. By default 
+accept is a block call. Till the time a client doesnot come and connect, accept would just wait and not return.
 
-<strong>client.recv</strong> is used to receive data from the client, argument is the size of the buffer. Here we will use the netcat utility to connect to the ip address. <b>Netcat</b> is a computer networking service for reading from and writing to network connections using TCP or UDP.
+<strong>client.recv</strong> is used to receive data from the client, argument is the size of the buffer. Here we 
+will use the netcat utility to connect to the ip address. <b>Netcat</b> is a computer networking service for reading
+from and writing to network connections using TCP or UDP.
 
-We create an echo server to accept a string from a client and then echo it back to the client. We are using the while loop to keep receiving data from the client, print it out on the terminal and send that same data back to the client. This will go on till the client disconnects or the network connection closes.
+We create an echo server to accept a string from a client and then echo it back to the client. We are using the 
+while loop to keep receiving data from the client, print it out on the terminal and send that same data back to the
+client. This will go on till the client disconnects or the network connection closes.
 
 <span style="text-decoration: underline;"><span style="color: #ff0000; text-decoration: underline;">Note:</span></span>
 
-But there is a problem here, when the server is stopped and the client is disconnected, if we want to run the server program again, it doesn't run. This is because the address once bounded to a socket is not immediately available for reuse if the program exits abruptly. It takes a lot of time to be available. To ensure that the address is reusable as fast as possible we will call a special option in the socket:
+But there is a problem here, when the server is stopped and the client is disconnected, if we want to run the server
+program again, it doesn't run. This is because the address once bounded to a socket is not immediately available
+for reuse if the program exits abruptly. It takes a lot of time to be available. To ensure that the address is 
+reusable as fast as possible we will call a special option in the socket:
 <pre class="lang:python decode:true">tcpSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)</pre>]]></content:encoded>
