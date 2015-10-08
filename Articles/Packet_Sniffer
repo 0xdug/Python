@@ -1,0 +1,72 @@
+
+		<title>Creating a Packet Sniffer and Injector using Python </title>
+		<link>http://www.security.securethelock.com/?p=110</link>
+		<pubDate>Wed, 30 Nov -0001 00:00:00 +0000</pubDate>
+		<guid isPermaLink="false">http://security.securethelock.com/?p=110</guid>
+		<description></description>
+		<content:encoded><![CDATA[
+		In this article we will look at how to create a Packet Sniffer and an Injector using Python. First we will look at packet sniffing with raw sockets.
+
+A <strong>packet sniffer</strong> is a computer program or a piece of computer hardware that can intercept and log traffic passing over a digital network or part of a network. As data streams flow across the network, the sniffer captures each packet and decodes the packet's raw data, showing the values of various fields in the packet, and analyzes its content according to the appropriate RFC (Request for Comments) or other specifications.
+
+A <b>raw socket</b> is an internet socket that allows direct sending and receiving of Internet Protocol packets without any protocol-specific transport layer formatting. Raw sockets allow a program or application to provide custom headers for the specific protocol(tcp ip) which are otherwise provided by the kernel/os network stack. In regular socket programming, we create a TCP/UDP server and the network card pass the packet up the IP stack and is finally received by the user land application. Raw sockets provide way for a packet to bypass the whole network stack traversal regular processing and deliver it directly to an application. This application gets access to the packet in whole including headers, data. And the application can analyse the packet.
+
+Here we will use the PF_PACKET interface to create the raw socket (there are multiple ways to create it). This application gets access to the packet in whole including headers, data. And the application can analyse the packet. It operates at layer two of the OSI and allows us to send/receive raw packets directly from the device driver. It supports filtering using Berkley Packet Filter.
+<pre class="lang:python decode:true">#!/usr/bin/python
+import socket
+import struct
+import binascii
+
+rawSocket = socket.socket(socket.PF_PACKET, socket.SOCK_RAW, socket.htons(0x0800))
+pkt = rawSocket.recvfrom(2048)
+
+#Ethernet Header
+ethernetHeader = pkt[0][0:14]
+eth_hdr = struct.unpack("!6s6s2s", ethernetHeader)
+destination= binascii.hexlify(eth_hdr[0])
+source= binascii.hexlify(eth_hdr[1])
+protocol= binascii.hexlify(eth_hdr[2])
+print "Destination: " +destination
+print "Source: " +source
+print "Protocol:" +protocol
+
+
+#IP Header
+ipHeader = pkt[0][14:34]
+ip_hdr = struct.unpack("!12s4s4s", ipHeader)
+sourceIP = socket.inet_ntoa(ip_hdr[1])
+destinationIP = socket.inet_ntoa(ip_hdr[2])
+print "Source IP address: " + sourceIP
+print "Destination IP address: " + destinationIP
+
+#TCP Header
+tcpHeader = pkt[0][34:54]
+tcp_hdr = struct.unpack("!HH16s", tcpHeader)
+sourcePort = socket.inet_ntoa(tcp_hdr[0])
+destinationPort = socket.inet_ntoa(tcp_hdr[1])
+print "Source Port: " + sourcePort
+print "Destination Port: " + destinationPort</pre>
+In <strong>rawSocket=socket.socket(socket.PF_PACKET,socket.SOCK_RAW,socket.htons(0x0800)</strong> , we use the PF_PACKET family, and SOCK_RAW as the kind of socket, and in the protocol field we mention that we want the IP protocol.
+
+The idea is to locate the location in the whole packet, where a specific header lies, unpack it into a structure wher you can understand which is the IP address, port number etc.. One point to be noted is that to do any raw socket programming you would need to run as root or have permissions to create sockets.
+
+To know more about packet headers, view our article
+
+Now we will see how to create an Injector using Raw Sockets in Python.
+
+Packet Injection is the ability to inject raw packets into the network without having to go through the regular network stack. The <b>packet injection</b> process allows an unknown third party to disrupt or intercept packets from the consenting parties that are communicating, which can lead to degradation or blockage of users' ability to utilize certain network services or protocols. <b></b> By utilizing raw sockets, NDIS function calls, or direct access to a network adapter kernel mode driver, arbitrary packets can be constructed and injected into a computer network. These arbitrary packets can be constructed from any type of packet protocol (ICMP, TCP, UDP, and others) since there is full control over the packet header while the packet is being assembled.
+
+We will create our packets in user space and send them out. This can be used to stimulate the network to do interesting stuffs. We will see if we can inject random packets into the network. First we will decide which interface to do the packet injection, and we will do that by binding to that specific interface by using the bing function. We will create a Ethernet packet, which will have a destination address, source address and an Ethtype, and after that we will inject a random string inside. For this we use the pack function, and we pack the first six bytes to destination address, the next six bytes to source address and the last two bytes to the ether type which will default to IP.
+<pre class="lang:python decode:true ">#!/usr/bin/python
+import socket
+import struct
+
+rawSocket = socket.socket(socket.PF_PACKET, socket.SOCK_RAW, socket.htons(0x0800))
+rawSocket.bind(("eth0", socket.htons(0x0800)))
+packet = struct.pack("!6s6s2s", 'xaaxaaxaaxaaxaaxaa', 'xbbxbbxbbxbbxbbxbb', 'x08x00')
+rawSocket.send(packet + "Packet Injector")</pre>
+&nbsp;
+
+We will keep the destination mac address as all a's and the source mac address as all b's and the ether type to be IP.
+
+Apart from the ethernet header, we will add some additional data at the end of the packet. To see if the packet is actually going out or not, you can use wireshark or tcpdump.
