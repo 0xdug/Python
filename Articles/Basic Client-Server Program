@@ -26,7 +26,9 @@ used for regular client and server programming, and Raw sockets used for creatin
 
 Lets see how to create a simple client and server using sockets. We can do this using the socket module in python.
 When a client wants to connect to the server to use the service that it provides, the server first creates a socket.
-<pre class="lang:python decode:true">#!/usr/bin/python
+<pre class="lang:python decode:true">
+
+#!/usr/bin/python
 import socket 
 
 #------------------------------Creating a TCP Socket----------------------------#
